@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "minecraft:bone_meal",
+    "G": "minecraft:gravel",
+    "S": "minecraft:sand"
+  },
+  "pattern": [
+    " B ",
+    "BGB",
+    " S "
+  ],
+  "result": {
+    "id": "minecraft:dirt"
+  }
+}

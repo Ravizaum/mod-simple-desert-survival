@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:desert",
+  "features": ["simpledesertsurvival:rare_acacia_tree"],
+  "step": "vegetal_decoration"
+}
