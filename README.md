@@ -1,46 +1,32 @@
-# Simple Desert Survival — Feature Overview
+# Simple Desert Survival
 
-A NeoForge mod for Minecraft 26.2 that makes desert-only survival actually viable, whether
+A NeoForge mod for Minecraft that makes desert-only survival actually viable, whether
 you're just playing near a desert or generating a world entirely made of it.
 
-## World Generation
+## Why
 
-- **"Desert Survival" world type.** A new world preset (selectable from the World Type button
-  when creating a world) whose overworld is entirely desert on land, but - unlike a vanilla
-  single-biome world, which uses the same fixed biome underwater too - still generates proper
-  oceans: a shallow `warm_ocean` band (coral, kelp, tropical fish, correct water color) followed
-  by `deep_ocean` further from shore (guardians, ocean ravines, monuments). See
-  `DesertOceanBiomeSource` for how this works: it's a custom biome source that reads only the
-  continentalness climate parameter (not vanilla's full six-parameter system) to decide between
-  desert, beach, shallow ocean, and deep ocean.
-- **Rare acacia trees in any desert biome** - not just the new world type. Scatters occasional
-  acacia trees (reusing vanilla's own tree feature) across desert biomes, gated by a placement
-  check for exposed sand so it only ever tries to grow where it can actually survive.
+Deserts are one of the harshest biomes to survive in vanilla Minecraft — no trees, no
+easy dirt, nothing but sand and cacti. That's fine as a challenge run, but it also
+means a desert-only world is basically unplayable out of the box. This mod fills in
+just enough of the gaps to make it a real, sustainable playstyle: a proper world type
+with real oceans instead of an endless sand plane, a renewable wood source, and a way
+to get dirt without leaving the sand behind.
 
-## Survival
+## What's different
 
-- **Dead bushes drop acacia saplings** (37.5% chance, 0 or 1 per break) instead of nothing,
-  giving you a way to grow your own acacia trees for wood.
-- **Dirt can be crafted** from ingredients a desert actually has: bone meal, gravel, and sand,
-  shaped like a small pit being filled in:
-  ```
-   B
-  BGB
-   S
-  ```
-  (bone meal on top of and beside a gravel block, gravel on top of sand) → 1 dirt.
+- **A real "Desert Survival" world type**, selectable when creating a new world.
+  Land is all desert, but the oceans are real oceans — coral reefs and shallow warm
+  water near the coast, deep water with guardians and monuments further out — not
+  just more sand under the waves.
+- **Acacia trees show up in deserts**, both in the new world type and in any normal
+  desert biome, giving you a renewable source of wood.
+- **Dead bushes drop acacia saplings** sometimes when broken, so you can plant and
+  grow your own trees instead of relying on luck to find one.
+- **Dirt is craftable** from things a desert actually has lying around — bone meal,
+  gravel, and sand — so you're not stuck building on sand forever.
 
-## Technical Notes (for future maintenance)
-
-- NeoForge ships its own datapack override for `minecraft:blocks/dead_bush`'s loot table at a
-  pack priority higher than any mod's own data files, so the sapling drop is force-applied in
-  code (`onLootTableLoad` in `SimpleDesertSurvival.java`) rather than a plain datapack JSON file,
-  same issue and same fix as documented in the Real Stone Age mod.
-- The dirt recipe uses a brand-new recipe ID (not overriding an existing vanilla one), so it
-  doesn't need that same treatment - a plain datapack JSON file is enough.
-- `#minecraft:normal` (the tag that puts a preset in the World Type button's cycle) is additive
-  across datapacks, unlike recipes/loot tables, so adding the Desert Survival preset to it is a
-  plain tag file, no code-forcing required.
+Want the exact numbers, recipes, and implementation details behind every change above?
+See [DOCUMENTATION.md](DOCUMENTATION.md).
 
 ## License
 
