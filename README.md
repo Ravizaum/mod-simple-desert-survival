@@ -24,6 +24,8 @@ to get dirt without leaving the sand behind.
   grow your own trees instead of relying on luck to find one.
 - **Dirt is craftable** from things a desert actually has lying around — bone meal,
   gravel, and sand — so you're not stuck building on sand forever.
+- **Dry grass can drop wheat seeds** too, not just regular grass, so the badlands and
+  deserts you're already standing in can help start a farm.
 
 Want the exact numbers, recipes, and implementation details behind every change above?
 See [DOCUMENTATION.md](DOCUMENTATION.md).

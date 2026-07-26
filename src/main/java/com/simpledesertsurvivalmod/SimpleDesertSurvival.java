@@ -47,15 +47,37 @@ public class SimpleDesertSurvival {
             {"type":"minecraft:block","pools":[{"entries":[{"type":"minecraft:item","conditions":[{"condition":"minecraft:random_chance","chance":0.375}],"functions":[{"function":"minecraft:explosion_decay"}],"name":"minecraft:acacia_sapling"}],"rolls":1.0}],"random_sequence":"minecraft:blocks/dead_bush"}
             """;
 
+    // Same shears_dig-priority shadowing issue as dead_bush above, for the two dry grass blocks.
+    // Vanilla's short_grass drops wheat seeds at a 0.125 chance when broken without shears/silk touch;
+    // dry grass (both blocks) drops seeds at half that (0.0625) instead, otherwise mirroring NeoForge's
+    // own shears/silk-touch handling so shears and Silk Touch keep working as normal.
+    private static final String SHORT_DRY_GRASS_LOOT_TABLE_JSON = """
+            {"type":"minecraft:block","pools":[{"entries":[{"type":"minecraft:alternatives","children":[{"type":"minecraft:item","conditions":[{"condition":"minecraft:any_of","terms":[{"condition":"neoforge:can_item_perform_ability","ability":"shears_dig"},{"condition":"minecraft:match_tool","predicate":{"predicates":{"minecraft:enchantments":[{"enchantments":"minecraft:silk_touch","levels":{"min":1}}]}}}]}],"name":"minecraft:short_dry_grass"},{"type":"minecraft:item","conditions":[{"condition":"minecraft:random_chance","chance":0.0625}],"functions":[{"function":"minecraft:apply_bonus","enchantment":"minecraft:fortune","formula":"minecraft:uniform_bonus_count","parameters":{"bonusMultiplier":2}},{"function":"minecraft:explosion_decay"}],"name":"minecraft:wheat_seeds"}]}],"rolls":1.0}],"random_sequence":"minecraft:blocks/short_dry_grass"}
+            """;
+
+    private static final String TALL_DRY_GRASS_LOOT_TABLE_JSON = """
+            {"type":"minecraft:block","pools":[{"entries":[{"type":"minecraft:alternatives","children":[{"type":"minecraft:item","conditions":[{"condition":"minecraft:any_of","terms":[{"condition":"neoforge:can_item_perform_ability","ability":"shears_dig"},{"condition":"minecraft:match_tool","predicate":{"predicates":{"minecraft:enchantments":[{"enchantments":"minecraft:silk_touch","levels":{"min":1}}]}}}]}],"name":"minecraft:tall_dry_grass"},{"type":"minecraft:item","conditions":[{"condition":"minecraft:random_chance","chance":0.0625}],"functions":[{"function":"minecraft:apply_bonus","enchantment":"minecraft:fortune","formula":"minecraft:uniform_bonus_count","parameters":{"bonusMultiplier":2}},{"function":"minecraft:explosion_decay"}],"name":"minecraft:wheat_seeds"}]}],"rolls":1.0}],"random_sequence":"minecraft:blocks/tall_dry_grass"}
+            """;
+
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
-        if (!event.getName().getNamespace().equals("minecraft") || !event.getName().getPath().equals("blocks/dead_bush")) {
+        if (!event.getName().getNamespace().equals("minecraft")) {
+            return;
+        }
+
+        String forcedJson = switch (event.getName().getPath()) {
+            case "blocks/dead_bush" -> DEAD_BUSH_LOOT_TABLE_JSON;
+            case "blocks/short_dry_grass" -> SHORT_DRY_GRASS_LOOT_TABLE_JSON;
+            case "blocks/tall_dry_grass" -> TALL_DRY_GRASS_LOOT_TABLE_JSON;
+            default -> null;
+        };
+        if (forcedJson == null) {
             return;
         }
 
         var ops = event.getRegistries().createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE);
-        var parsed = net.minecraft.world.level.storage.loot.LootTable.DIRECT_CODEC.parse(ops, JsonParser.parseString(DEAD_BUSH_LOOT_TABLE_JSON));
-        parsed.resultOrPartial(error -> LOGGER.error("Failed to parse forced dead_bush loot table: {}", error))
+        var parsed = net.minecraft.world.level.storage.loot.LootTable.DIRECT_CODEC.parse(ops, JsonParser.parseString(forcedJson));
+        parsed.resultOrPartial(error -> LOGGER.error("Failed to parse forced loot table for {}: {}", event.getName(), error))
                 .ifPresent(event::setTable);
     }
 }

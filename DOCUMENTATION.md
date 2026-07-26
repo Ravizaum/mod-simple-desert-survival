@@ -21,6 +21,10 @@ overview, see [README.md](README.md).
 
 - **Dead bushes drop acacia saplings** (37.5% chance, 0 or 1 per break) instead of nothing,
   giving you a way to grow your own acacia trees for wood.
+- **Dry grass and tall dry grass can drop wheat seeds** (6.25% chance per break, i.e. half of
+  short/tall grass's 12.5%) when broken by hand or a non-shears tool, instead of dropping
+  nothing. Breaking with shears or a Silk Touch tool still drops the grass block itself, same
+  as vanilla.
 - **Dirt can be crafted** from ingredients a desert actually has: bone meal, gravel, and sand,
   shaped like a small pit being filled in:
   ```
@@ -35,7 +39,9 @@ overview, see [README.md](README.md).
 - NeoForge ships its own datapack override for `minecraft:blocks/dead_bush`'s loot table at a
   pack priority higher than any mod's own data files, so the sapling drop is force-applied in
   code (`onLootTableLoad` in `SimpleDesertSurvival.java`) rather than a plain datapack JSON file,
-  same issue and same fix as documented in the Real Stone Age mod.
+  same issue and same fix as documented in the Real Stone Age mod. The same shadowing applies to
+  `minecraft:blocks/short_dry_grass` and `minecraft:blocks/tall_dry_grass`, so the wheat seeds
+  drop for those is force-applied the same way.
 - The dirt recipe uses a brand-new recipe ID (not overriding an existing vanilla one), so it
   doesn't need that same treatment - a plain datapack JSON file is enough.
 - `#minecraft:normal` (the tag that puts a preset in the World Type button's cycle) is additive
